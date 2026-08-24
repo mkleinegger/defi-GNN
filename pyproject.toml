@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "defi-service-gnn"
+version = "0.1.0"
+description = "GraphSAGE classification of DeFi services from Ethereum transaction traces"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+keywords = ["defi", "ethereum", "graph-neural-network", "graphsage"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "networkx==3.4.2",
+    "numpy==2.2.3",
+    "pandas==2.2.3",
+    "polars==1.24.0",
+    "pyarrow==19.0.1",
+    "pyyaml==6.0.2",
+    "scikit-learn==1.6.1",
+    "torch==2.6.0",
+    "torch-geometric==2.6.1",
+]
+
+[project.optional-dependencies]
+sampling = [
+    # The original notebook used torch-sparse for PyG's NeighborLoader.
+    # This wheel matches Python 3.12, PyTorch 2.6, and its CUDA 12.4 runtime.
+    "torch-scatter @ https://data.pyg.org/whl/torch-2.6.0%2Bcu124/torch_scatter-2.1.2%2Bpt26cu124-cp312-cp312-linux_x86_64.whl",
+    "torch-sparse @ https://data.pyg.org/whl/torch-2.6.0%2Bcu124/torch_sparse-0.6.18%2Bpt26cu124-cp312-cp312-linux_x86_64.whl",
+]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.11",
+]
+
+[project.scripts]
+defi-gnn = "defi_service_gnn.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore:Using 'NeighborSampler' without a 'pyg-lib' installation is deprecated:UserWarning",
+]
+
+[tool.ruff]
+include = [
+    "src/**/*.py",
+    "tests/**/*.py",
+]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]

@@ -1,0 +1,37 @@
+# Paths are resolved from the directory where the command is run.
+data:
+  dataset_root: data
+  trace_file: traces/combined_trace.parquet
+  addresses_file: tvl_addr.csv
+  mappings_file: service_mappings.csv
+  baseline_dir: report_baselines
+  blocks_file: blocks/blocks.parquet
+  features_file: processed/address_features.parquet
+  pagerank_file: processed/address_pagerank.parquet
+  processed_file: processed/graph.pt
+  metadata_file: processed/metadata.json
+  add_node_features: true
+
+training:
+  output_dir: outputs/default
+  device: cuda:0
+  seed: 12041500
+  hidden_channels: 4096
+  dropout: 0.15
+  learning_rate: 0.003
+  weight_decay: 0.000001
+  label_smoothing: 0.0
+  batch_size: 128
+  # Two-hop sampling used by the original two-layer GraphSAGE implementation.
+  num_neighbors: [150, 20]
+  top_k_classes: 10
+  unknown_sample_size: 800
+  train_fraction: 0.70
+  val_fraction: 0.10
+  max_steps: 5000
+  eval_every: 200
+  max_runtime_seconds: 600
+  checkpoint_name: best_model.pt
+  history_name: history.csv
+  metrics_name: metrics.json
+  print_model_summary: true
